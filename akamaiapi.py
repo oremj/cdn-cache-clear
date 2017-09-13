@@ -12,7 +12,12 @@ class Session:
     """Sends authenticated to Akamai API endpoints"""
     def __init__(self, client_token, client_secret, access_token, base_url):
         session = requests.Session()
-        session.auth = EdgeGridAuth(client_token, client_secret, access_token)
+        session.auth = EdgeGridAuth(
+            client_token,
+            client_secret,
+            access_token,
+            max_body=50000,
+        )
         self.session = session
         self.base_url = base_url
 
@@ -26,7 +31,6 @@ class Session:
         }
         if headers:
             default_headers.update(headers)
-
         resp = self.session.post(
             self._url_for(path),
             data=json.dumps(data),

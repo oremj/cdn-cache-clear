@@ -7,14 +7,14 @@ import boto3
 
 def kms_decrypt_env(key):
     """Decrypt environment variable"""
-    return kms_decrypt(os.environ[key])
+    return kms_decrypt(b64decode(os.environ[key]))
 
 def kms_decrypt(encrypted_data):
     """Decrypt KMS variables"""
-    res = boto3.client('kms').decrypt(
-        CiphertextBlob=b64decode(encrypted_data),
+    res = boto3.client("kms").decrypt(
+        CiphertextBlob=encrypted_data,
     )
-    return res['Plaintext']
+    return res["Plaintext"].decode("utf-8")
 
 def s3_bucket_for(bucket_prefix, path):
     """returns s3 bucket for path"""
